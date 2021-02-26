@@ -6,7 +6,7 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/abbot/go-http-auth"
+	auth "github.com/abbot/go-http-auth"
 
 	"github.com/gen2brain/cam2ip/handlers"
 	"github.com/gen2brain/cam2ip/reader"
@@ -54,6 +54,8 @@ func (s *Server) ListenAndServe() error {
 	http.Handle("/jpeg", newAuthHandler(handlers.NewJPEG(s.Reader), basic))
 	http.Handle("/mjpeg", newAuthHandler(handlers.NewMJPEG(s.Reader, s.Delay), basic))
 	http.Handle("/socket", newAuthHandler(handlers.NewSocket(s.Reader, s.Delay), basic))
+	http.Handle("/operation", newAuthHandler(handlers.Operation(), basic))
+	http.Handle("/upload", newAuthHandler(handlers.NewDiscern(s.Reader), basic))
 
 	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
